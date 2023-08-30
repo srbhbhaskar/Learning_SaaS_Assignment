@@ -66,7 +66,7 @@
 
   <!-- Modal for Adding New Questions -->
   <div #questionModal class="modal fade" id="questionModal" tabindex="-1" aria-labelledby="questionModalLabel"
-    aria-hidden="true">
+    aria-hidden="true" (hidden.bs.modal)="resetFormAndCloseModal()">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
