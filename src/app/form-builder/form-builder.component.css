@@ -1,0 +1,33 @@
+.wrapper{
+  padding: 1rem;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: black;
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  outline: none;
+}
+
+.btn-link:hover {
+  text-decoration: none;
+}
+
+.required{
+  color: red;
+}
+
+.reviewForm{
+  width: 50%;
+}
+
+.actions{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

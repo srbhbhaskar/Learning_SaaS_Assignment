@@ -1,0 +1,147 @@
+<div class="wrapper">
+  <!-- Review Form -->
+  <form [formGroup]="reviewForm" [ngClass]="savedQuestions.length > 0 ? 'reviewForm' : ''">
+
+    <div *ngFor="let question of savedQuestions; let qIndex = index" class="question-card mb-4 p-3 ">
+
+      <!-- Display Question -->
+      <label class="form-label">
+        <strong>{{ question.questionText }}</strong>
+        <span *ngIf="question.isRequired" class="text-danger">*</span>
+      </label>
+
+      <!-- Paragraph Type Question -->
+      <div *ngIf="question.questionType === 'paragraph'">
+        <textarea rows="3" formControlName="question_{{qIndex}}" class="form-control"></textarea>
+        <div *ngIf="reviewForm.get('question_' + qIndex)?.invalid && reviewForm.get('question_' + qIndex)?.touched"
+          class="text-danger">
+          This field is required.
+        </div>
+      </div>
+
+      <!-- MCQ Type Question -->
+      <div *ngIf="question.questionType === 'mcq'">
+
+        <!-- Set the formArrayName on a parent div -->
+        <div formArrayName="question_{{qIndex}}">
+          <div *ngFor="let option of question.options; let oIndex = index">
+            <label for="option-{{qIndex}}-{{oIndex}}">
+              <!-- Use formControlName with an index for each checkbox inside the FormArray -->
+              <input type="checkbox" [formControlName]="oIndex" id="option-{{qIndex}}-{{oIndex}}">
+              {{ option }}
+            </label>
+          </div>
+        </div>
+
+        <!-- Adding the "Other" option -->
+        <div *ngIf="question.allowSpecifyOwn">
+          <label for="other-{{qIndex}}">
+            <input type="checkbox" formControlName="other_{{qIndex}}" id="other-{{qIndex}}"> Other
+          </label>
+          <div *ngIf="reviewForm.get('other_' + qIndex)?.value">
+            <label for="description-{{qIndex}}" class="form-label">Description <span class="text-danger">*</span></label>
+            <input type="text" formControlName="description_{{qIndex}}" id="description-{{qIndex}}" class="form-control">
+            <div *ngIf="reviewForm.get('description_' + qIndex)?.invalid && reviewForm.get('description_' + qIndex)?.touched"
+                 class="text-danger">
+              Description is required.
+            </div>
+          </div>
+        </div>
+        <div *ngIf="question.isRequired && reviewForm.get('question_' + qIndex)?.invalid && reviewForm.get('question_' + qIndex)?.touched"
+             class="text-danger">
+          Please select at least one option.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Review & Add New Question Buttons -->
+    <div class="mb-4 actions">
+      <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#questionModal">Add New
+        Question</button>
+      <button type="button" *ngIf="savedQuestions.length > 0" class="btn btn-primary" (click)="reviewAnswers()">Review
+        my answers</button>
+    </div>
+  </form>
+
+  <!-- Modal for Adding New Questions -->
+  <div #questionModal class="modal fade" id="questionModal" tabindex="-1" aria-labelledby="questionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="questionModalLabel">Add a New Question</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="resetFormAndCloseModal()" #closeBtn></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="questionForm">
+
+            <!-- Question Type Dropdown -->
+            <div class="mb-3">
+              <label class="form-label">Question Type <span class="text-danger">*</span></label>
+              <select class="form-control" formControlName="questionType" (change)="onQuestionTypeChange()">
+                <option value="" disabled>Select Question Type</option>
+                <option value="mcq">Checkbox List</option>
+                <option value="paragraph">Paragraph</option>
+              </select>
+              <div *ngIf="questionForm.get('questionType')?.invalid && questionForm.get('questionType')?.touched"
+                class="text-danger">Select a question type.</div>
+            </div>
+
+            <!-- Question Text -->
+            <div class="mb-3">
+              <label class="form-label">Question Text <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="questionText" placeholder="Type Question here">
+              <div *ngIf="questionForm.get('questionText')?.invalid && questionForm.get('questionText')?.touched"
+                class="text-danger">
+                Question text is required.
+              </div>
+            </div>
+
+            <!-- MCQ Options -->
+            <div *ngIf="questionForm.value.questionType === 'mcq'">
+              <div formArrayName="options">
+                <div *ngFor="let option of options.controls; let i = index" class="mb-3">
+                  <label class="form-label">Option {{ i+1 }} <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" [formControlName]="i"
+                      placeholder="Add Answer Option {{i + 1}}">
+                    <button class="btn btn-danger" type="button" *ngIf="options.length > 2"
+                      (click)="removeOption(i)">R</button>
+                  </div>
+                  <div *ngIf="option.invalid && option.touched" class="text-danger">
+                    Option is required.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Allow Specify Own Option -->
+            <div *ngIf="questionForm.value.questionType === 'mcq'" class="mb-3">
+              <label>
+                <input type="checkbox" id="allowSpecifyOwn" formControlName="allowSpecifyOwn">
+                Allow user to specify their own answer
+              </label>
+            </div>
+
+            <!-- Required Field -->
+            <div class="mb-3">
+              <input type="checkbox" formControlName="isRequired">
+              <label>Mark as required </label>
+            </div>
+
+            <!-- Add/Remove Option Buttons -->
+            <div *ngIf="questionForm.value.questionType === 'mcq'" class="mb-3">
+              <button type="button" class="btn btn-link" (click)="addOption()">+ Add Option</button>
+            </div>
+
+            <div class="mb-3">
+              <button type="submit" class="btn btn-primary" (click)="onSubmit()">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
