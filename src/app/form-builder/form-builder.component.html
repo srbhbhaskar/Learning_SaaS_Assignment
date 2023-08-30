@@ -108,7 +108,8 @@
                     <input type="text" class="form-control" [formControlName]="i"
                       placeholder="Add Answer Option {{i + 1}}">
                     <button class="btn btn-danger" type="button" *ngIf="options.length > 2"
-                      (click)="removeOption(i)">R</button>
+                      (click)="removeOption(i)"><i class="fas fa-trash"></i>
+                    </button>
                   </div>
                   <div *ngIf="option.invalid && option.touched" class="text-danger">
                     Option is required.
