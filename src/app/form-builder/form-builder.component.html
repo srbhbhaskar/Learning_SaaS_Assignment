@@ -27,7 +27,7 @@
           <div *ngFor="let option of question.options; let oIndex = index">
             <label for="option-{{qIndex}}-{{oIndex}}">
               <!-- Use formControlName with an index for each checkbox inside the FormArray -->
-              <input type="checkbox" [formControlName]="oIndex" id="option-{{qIndex}}-{{oIndex}}">
+              <input type="checkbox" class="mx-2" [formControlName]="oIndex" id="option-{{qIndex}}-{{oIndex}}">
               {{ option }}
             </label>
           </div>
@@ -36,7 +36,7 @@
         <!-- Adding the "Other" option -->
         <div *ngIf="question.allowSpecifyOwn">
           <label for="other-{{qIndex}}">
-            <input type="checkbox" formControlName="other_{{qIndex}}" id="other-{{qIndex}}"> Other
+            <input type="checkbox" class="mx-2" formControlName="other_{{qIndex}}" id="other-{{qIndex}}"> Other
           </label>
           <div *ngIf="reviewForm.get('other_' + qIndex)?.value">
             <label for="description-{{qIndex}}" class="form-label">Description <span class="text-danger">*</span></label>
@@ -121,14 +121,14 @@
             <!-- Allow Specify Own Option -->
             <div *ngIf="questionForm.value.questionType === 'mcq'" class="mb-3">
               <label>
-                <input type="checkbox" id="allowSpecifyOwn" formControlName="allowSpecifyOwn">
+                <input type="checkbox" class="mx-2" id="allowSpecifyOwn" formControlName="allowSpecifyOwn">
                 Allow user to specify their own answer
               </label>
             </div>
 
             <!-- Required Field -->
             <div class="mb-3">
-              <input type="checkbox" formControlName="isRequired">
+              <input type="checkbox" class="mx-2" formControlName="isRequired">
               <label>Mark as required </label>
             </div>
 
