@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormService } from '../form-builder/form.service';
+import { FormService } from '../form.service';
 import { Router } from '@angular/router';
 
 @Component({
