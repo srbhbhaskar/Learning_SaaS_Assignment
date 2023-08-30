@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class FormService {
   private formData: any[] = [];
+  private answersData: any[] = [];
 
   save(data: any) {
     this.formData.push(data);
@@ -12,5 +13,13 @@ export class FormService {
 
   getAll() {
     return this.formData;
+  }
+
+  saveAnswers(answers: any) {
+    this.answersData = answers;
+  }
+
+  getAnswers() {
+    return this.answersData;
   }
 }

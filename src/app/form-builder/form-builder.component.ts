@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, AbstractControl, FormGroup, ValidatorFn, Validators, FormControl } from '@angular/forms';
 import { FormService } from './form.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-builder',
@@ -13,7 +14,7 @@ export class FormBuilderComponent implements OnInit {
   reviewForm!: FormGroup;
   savedQuestions: any[] = [];
 
-  constructor(private fb: FormBuilder, private formService: FormService) {
+  constructor(private fb: FormBuilder, private formService: FormService , private router:Router) {
     this.initForm();
   }
 
@@ -142,7 +143,26 @@ atLeastOneCheckedValidator(minRequired = 1): ValidatorFn {
     });
 
     if (this.reviewForm.valid) {
-      console.log('Review successful!');
+      const combinedData = this.savedQuestions.map((question, i) => {
+        const answerData = {
+          questionText: question.questionText,
+          questionType: question.questionType,
+          answer: this.reviewForm.value[`question_${i}`],
+          other: question.allowSpecifyOwn ? this.reviewForm.value[`other_${i}`] : null,
+          description: question.allowSpecifyOwn ? this.reviewForm.value[`description_${i}`] : null
+        };
+
+        if (question.questionType === 'mcq') {
+          // Convert checkbox values to selected options for MCQ type
+          answerData.answer = question.options.filter((option: string, index: number) => this.reviewForm.value[`question_${i}`][index]);
+
+        }
+
+        return answerData;
+      });
+
+      this.formService.saveAnswers(combinedData);
+      this.router.navigate(['/form/answers']);
     }
   }
 }
