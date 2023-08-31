@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 const routes: Routes = [
   {
     path: '', children: [
+      {path:'' , redirectTo:'builder', pathMatch: 'full'},
       {path:'builder' , component:FormBuilderComponent},
       {path:'answers' , component:ReviewAnswersComponent}
 
